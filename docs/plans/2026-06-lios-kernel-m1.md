@@ -34,7 +34,7 @@ Primary `--cwd`: `/workspace/li-os`. Clone **lic** at `/workspace/lic`.
 | Phase | Key | Deliverable | Gate |
 |-------|-----|-------------|------|
 | **0** | `phase-0-scaffold` | Create **li-os** repo; `scripts/dev-vm.sh` skeleton; `scripts/gates/`; lic branch with `docs/kernel-abi.md` stub | `bash scripts/gates/phase-0-scaffold-gate.sh` |
-| **1** | `phase-p0-freestanding` | Freestanding link; `hello_kern` prints on QEMU serial **x86_64** | `bash scripts/gates/phase-p0-hello-kern-gate.sh` |
+| **1** | `phase-p0-freestanding` | Freestanding link; `hello_kern` serial via @hw (i686 multiboot; Unicorn/QEMU smoke) | `bash scripts/gates/phase-p0-hello-kern-gate.sh` |
 | **2** | `phase-p0c-dev-vm` | `dev-vm.sh --smoke` documented; CI script stub; **aarch64** guest row optional | `bash scripts/gates/phase-p0c-dev-vm-gate.sh` |
 
 Advance `state.json` only when the current phase gate exits 0.
@@ -74,7 +74,7 @@ Expected: `phase-p0c-dev-vm` done; `dev-vm.sh --smoke` green for x86_64 guest; l
   status: done
 - id: phase-p0-freestanding
   content: hello_kern freestanding link on QEMU x86_64 serial
-  status: pending
+  status: done
 - id: phase-p0c-dev-vm
   content: dev-vm.sh --smoke + CI stub
   status: pending

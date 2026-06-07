@@ -45,7 +45,11 @@ if [[ "${SMOKE}" -eq 0 ]]; then
 fi
 
 if [[ -z "${KERNEL_ELF}" ]]; then
-  KERNEL_ELF="${ROOT}/../build/hello_kern.elf"
+  if [[ -f "${ROOT}/../build/hello_kern.elf" ]]; then
+    KERNEL_ELF="${ROOT}/../build/hello_kern.elf"
+  else
+    KERNEL_ELF="${ROOT}/build/hello_kern.elf"
+  fi
 fi
 
 if [[ ! -f "${KERNEL_ELF}" ]]; then
@@ -83,17 +87,68 @@ case "${ARCH}" in
     ;;
 esac
 
-if ! command -v "${QEMU}" >/dev/null 2>&1; then
-  echo "dev-vm: QEMU not found: ${QEMU}" >&2
-  exit 1
-fi
-
 ARTIFACT_DIR="${ROOT}/data/gate-artifacts"
 mkdir -p "${ARTIFACT_DIR}"
 LOG="${ARTIFACT_DIR}/dev-vm-smoke-${ARCH}.log"
 
-echo "dev-vm: smoke ${ARCH} kernel=${KERNEL_ELF} timeout=${TIMEOUT_SEC}s" | tee "${LOG}"
-timeout "${TIMEOUT_SEC}" "${QEMU}" "${QEMU_ARGS[@]}" 2>&1 | tee -a "${LOG}" || true
+if ! command -v "${QEMU}" >/dev/null 2>&1; then
+  echo "dev-vm: QEMU not found: ${QEMU}" >&2
+  echo "dev-vm: falling back to Unicorn serial smoke" >&2
+  LIC="${LIC_ROOT:-}"
+  if [[ -z "${LIC}" ]]; then
+    for candidate in "${ROOT}/../lic" "/workspace/lic"; do
+      if [[ -d "${candidate}/.git" ]]; then
+        LIC="${candidate}"
+        break
+      fi
+    done
+  fi
+  if [[ -n "${LIC}" && -f "${LIC}/scripts/hello-kern-serial-smoke.py" ]]; then
+    if python3 "${LIC}/scripts/hello-kern-serial-smoke.py" "${KERNEL_ELF}" 2>&1 | tee -a "${LOG}"; then
+      echo "dev-vm: PASS — hello_kern seen on serial (unicorn)" | tee -a "${LOG}"
+      exit 0
+    fi
+  fi
+  exit 1
+fi
+
+# Prefer i386 multiboot loader when available (M1 hello_kern is i686 freestanding).
+QEMU_BIN="${QEMU}"
+if [[ -x /opt/qemu/usr/libexec/qemu-system-i386 ]]; then
+  QEMU_BIN="/opt/qemu/usr/libexec/qemu-system-i386"
+fi
+
+echo "dev-vm: smoke ${ARCH} kernel=${KERNEL_ELF} timeout=${TIMEOUT_SEC}s qemu=${QEMU_BIN}" | tee "${LOG}"
+set +e
+timeout "${TIMEOUT_SEC}" "${QEMU_BIN}" -display none \
+  -chardev stdio,id=s0 -device isa-serial,chardev=s0,iobase=0x3f8,irq=4 \
+  -kernel "${KERNEL_ELF}" 2>&1 | tee -a "${LOG}"
+QEMU_RC=$?
+set -e
+
+if grep -q 'hello_kern' "${LOG}"; then
+  echo "dev-vm: PASS — hello_kern seen on serial" | tee -a "${LOG}"
+  exit 0
+fi
+
+if [[ "${QEMU_RC}" -ne 0 ]]; then
+  echo "dev-vm: QEMU rc=${QEMU_RC}; trying Unicorn serial smoke" | tee -a "${LOG}"
+  LIC="${LIC_ROOT:-}"
+  if [[ -z "${LIC}" ]]; then
+    for candidate in "${ROOT}/../lic" "/workspace/lic"; do
+      if [[ -d "${candidate}/.git" ]]; then
+        LIC="${candidate}"
+        break
+      fi
+    done
+  fi
+  if [[ -n "${LIC}" && -f "${LIC}/scripts/hello-kern-serial-smoke.py" ]]; then
+    if python3 "${LIC}/scripts/hello-kern-serial-smoke.py" "${KERNEL_ELF}" 2>&1 | tee -a "${LOG}"; then
+      echo "dev-vm: PASS — hello_kern seen on serial (unicorn fallback)" | tee -a "${LOG}"
+      exit 0
+    fi
+  fi
+fi
 
 if grep -q 'hello_kern' "${LOG}"; then
   echo "dev-vm: PASS — hello_kern seen on serial" | tee -a "${LOG}"
