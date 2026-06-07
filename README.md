@@ -25,10 +25,11 @@ bash scripts/gates/m1-progress-gate.sh
 # All M1 gates
 bash scripts/gates/m1-completion-gate.sh
 
-# Dev VM smoke (x86_64 guest; Unicorn fallback when QEMU is absent)
+# Dev VM smoke (lic smoke-kernel via QEMU COM1)
 export LIC_ROOT=../lic   # or /workspace/lic in agent workspaces
+export LIK_ROOT=../lik   # kernel source + smoke wrapper
 bash scripts/dev-vm.sh --smoke
-bash scripts/dev-vm.sh --smoke --arch x86_64 --kernel ../build/hello_kern.elf
+bash scripts/dev-vm.sh --smoke --arch i686 --kernel ../build/hello_kern.elf
 
 # CI entrypoint (stub for GitHub Actions)
 bash scripts/ci/m1-kernel-smoke.sh --check
@@ -38,9 +39,9 @@ bash scripts/ci/m1-kernel-smoke.sh --full
 
 ## Dev VM (`scripts/dev-vm.sh`)
 
-`--smoke` builds on Phase 1 `hello_kern`: launches QEMU with `-serial stdio` (or falls
-back to lic's Unicorn `@hw` serial smoke when QEMU is not installed). Success requires
-`hello_kern` on the captured serial log under `data/gate-artifacts/dev-vm-smoke-*.log`.
+`--smoke` builds on Phase 1 `hello_kern`: runs **`lic smoke-kernel`** (QEMU with ISA
+serial at COM1 / 0x3F8). Success requires `hello_kern` on the captured serial log under
+`data/gate-artifacts/dev-vm-smoke-*.log`.
 
 | Flag | Purpose |
 |------|---------|
@@ -55,8 +56,8 @@ ELF is available; otherwise gates document the skip.
 ## Prerequisites
 
 - `lic` on branch `cursor/lios-kernel-m1`, cloned at `../lic` or set `LIC_ROOT`
-- Python 3 + Unicorn (lic `hello-kern-serial-smoke.py`) for smoke without QEMU
-- QEMU (`qemu-system-x86_64`, optional `qemu-system-aarch64`) when available
+- `lik` cloned at `../lik` or set `LIK_ROOT` (kernel + `smoke-hello-kern.sh`)
+- QEMU (`qemu-system-i386` or `qemu-system-x86_64`; optional `/opt/qemu` layout)
 
 ## License
 
