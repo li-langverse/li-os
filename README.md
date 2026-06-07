@@ -8,9 +8,9 @@ This repo hosts the LiOS kernel M1 sprint: freestanding `lic` kernel target (`@h
 
 | Phase | Key | Status |
 |-------|-----|--------|
-| 0 | `phase-0-scaffold` | scaffold + gates |
-| 1 | `phase-p0-freestanding` | `hello_kern` on QEMU serial (x86_64) |
-| 2 | `phase-p0c-dev-vm` | `dev-vm.sh --smoke` documented + CI stub |
+| 0 | `phase-0-scaffold` | done |
+| 1 | `phase-p0-freestanding` | done — `hello_kern` serial smoke |
+| 2 | `phase-p0c-dev-vm` | done — `dev-vm.sh --smoke` + CI stub |
 
 Normative plan: [docs/plans/2026-06-lios-kernel-m1.md](docs/plans/2026-06-lios-kernel-m1.md)
 
@@ -19,19 +19,44 @@ Kernel ABI (lic): [../lic/docs/kernel-abi.md](../lic/docs/kernel-abi.md) when li
 ## Quick start
 
 ```bash
-# Phase 0 gate
-bash scripts/gates/phase-0-scaffold-gate.sh
+# Current phase gate (reads data/lios-kernel-loop/state.json)
+bash scripts/gates/m1-progress-gate.sh
 
-# Dev VM (Phase 2+)
-bash scripts/dev-vm.sh --help
-bash scripts/dev-vm.sh --smoke   # after hello_kern lands
+# All M1 gates
+bash scripts/gates/m1-completion-gate.sh
+
+# Dev VM smoke (x86_64 guest; Unicorn fallback when QEMU is absent)
+export LIC_ROOT=../lic   # or /workspace/lic in agent workspaces
+bash scripts/dev-vm.sh --smoke
+bash scripts/dev-vm.sh --smoke --arch x86_64 --kernel ../build/hello_kern.elf
+
+# CI entrypoint (stub for GitHub Actions)
+bash scripts/ci/m1-kernel-smoke.sh --check
+bash scripts/ci/m1-kernel-smoke.sh --smoke
+bash scripts/ci/m1-kernel-smoke.sh --full
 ```
+
+## Dev VM (`scripts/dev-vm.sh`)
+
+`--smoke` builds on Phase 1 `hello_kern`: launches QEMU with `-serial stdio` (or falls
+back to lic's Unicorn `@hw` serial smoke when QEMU is not installed). Success requires
+`hello_kern` on the captured serial log under `data/gate-artifacts/dev-vm-smoke-*.log`.
+
+| Flag | Purpose |
+|------|---------|
+| `--smoke` | Run serial smoke test |
+| `--arch x86_64\|aarch64` | Guest architecture (default: x86_64) |
+| `--kernel PATH` | Freestanding kernel ELF (default: `../build/hello_kern.elf`) |
+| `--timeout SEC` | QEMU timeout (default: 30) |
+
+Optional **aarch64** guest row: set `LIOS_KERNEL_ELF_AARCH64` when an aarch64 kernel
+ELF is available; otherwise gates document the skip.
 
 ## Prerequisites
 
-- `lic` built and on `PATH` (Phase 1+)
-- QEMU (`qemu-system-x86_64`, optional `qemu-system-aarch64`) for smoke tests
-- Clone [lic](https://github.com/li-langverse/lic) at `../lic` relative to this repo
+- `lic` on branch `cursor/lios-kernel-m1`, cloned at `../lic` or set `LIC_ROOT`
+- Python 3 + Unicorn (lic `hello-kern-serial-smoke.py`) for smoke without QEMU
+- QEMU (`qemu-system-x86_64`, optional `qemu-system-aarch64`) when available
 
 ## License
 

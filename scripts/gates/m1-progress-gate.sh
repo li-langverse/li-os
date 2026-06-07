@@ -39,6 +39,9 @@ case "${phase}" in
   phase-p0c-dev-vm)
     bash "${ROOT}/scripts/gates/phase-p0c-dev-vm-gate.sh"
     ;;
+  m1-complete)
+    bash "${ROOT}/scripts/gates/m1-completion-gate.sh"
+    ;;
   *)
     gate_fail "unknown phase in state.json: ${phase}"
     ;;

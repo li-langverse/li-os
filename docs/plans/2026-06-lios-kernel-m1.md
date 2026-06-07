@@ -77,4 +77,4 @@ Expected: `phase-p0c-dev-vm` done; `dev-vm.sh --smoke` green for x86_64 guest; l
   status: done
 - id: phase-p0c-dev-vm
   content: dev-vm.sh --smoke + CI stub
-  status: pending
+  status: done
