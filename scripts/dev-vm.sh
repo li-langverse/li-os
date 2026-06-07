@@ -16,15 +16,17 @@ usage() {
 Usage: $(basename "$0") [--smoke] [--arch x86_64|aarch64] [--kernel PATH] [--timeout SEC]
 
   --smoke       Run serial smoke test (hello_kern must print on QEMU stdout)
-  --arch ARCH   Guest architecture (default: x86_64)
+  --arch ARCH   Guest architecture (default: x86_64; also i686, aarch64)
   --kernel PATH Path to freestanding kernel ELF (default: build/hello_kern.elf)
   --timeout SEC QEMU run timeout in seconds (default: 30)
   -h, --help    Show this help
 
 Environment:
-  LIC_ROOT          Path to lic checkout (for building hello_kern in Phase 1+)
+  LIC_ROOT          Path to lic checkout (compiler toolchain)
+  LIK_ROOT          Path to lik checkout (kernel source + build scripts)
   LIOS_KERNEL_ELF   Override kernel ELF path
   LIOS_DEV_VM_ARCH  Default guest arch
+  LIOS_DEV_VM_HOSTFWD  Optional extra hostfwd rules (comma-separated host:guest:proto)
 EOF
 }
 
@@ -59,8 +61,27 @@ if [[ ! -f "${KERNEL_ELF}" ]]; then
 fi
 
 case "${ARCH}" in
-  x86_64)
-    QEMU="qemu-system-x86_64"
+  i686|x86_64)
+    QEMU="qemu-system-i386"
+    if command -v qemu-system-i386 >/dev/null 2>&1; then
+      QEMU="qemu-system-i386"
+    elif [[ -x /opt/qemu/usr/libexec/qemu-system-i386 ]]; then
+      QEMU="/opt/qemu/usr/libexec/qemu-system-i386"
+    elif command -v qemu-system-x86_64 >/dev/null 2>&1; then
+      QEMU="qemu-system-x86_64"
+    fi
+    NET_ARGS=()
+    if [[ -n "${LIOS_DEV_VM_HOSTFWD:-}" ]]; then
+      NETDEV="user,id=net0"
+      IFS=',' read -ra _rules <<< "${LIOS_DEV_VM_HOSTFWD}"
+      for rule in "${_rules[@]}"; do
+        rule="${rule// /}"
+        [[ -n "${rule}" ]] && NETDEV+=",hostfwd=${rule}"
+      done
+      NET_ARGS=(-netdev "${NETDEV}" -device virtio-net-pci,netdev=net0)
+    else
+      NET_ARGS=(-netdev user,id=net0 -device virtio-net-pci,netdev=net0)
+    fi
     QEMU_ARGS=(
       -machine q35
       -cpu max
@@ -68,6 +89,7 @@ case "${ARCH}" in
       -nographic
       -kernel "${KERNEL_ELF}"
       -serial stdio
+      "${NET_ARGS[@]}"
     )
     ;;
   aarch64)
@@ -91,25 +113,30 @@ ARTIFACT_DIR="${ROOT}/data/gate-artifacts"
 mkdir -p "${ARTIFACT_DIR}"
 LOG="${ARTIFACT_DIR}/dev-vm-smoke-${ARCH}.log"
 
-if ! command -v "${QEMU}" >/dev/null 2>&1; then
-  echo "dev-vm: QEMU not found: ${QEMU}" >&2
-  echo "dev-vm: falling back to Unicorn serial smoke" >&2
-  LIC="${LIC_ROOT:-}"
-  if [[ -z "${LIC}" ]]; then
-    for candidate in "${ROOT}/../lic" "/workspace/lic"; do
+unicorn_smoke() {
+  local lik="${LIK_ROOT:-}"
+  if [[ -z "${lik}" ]]; then
+    for candidate in "${ROOT}/../lik" "/workspace/lik"; do
       if [[ -d "${candidate}/.git" ]]; then
-        LIC="${candidate}"
+        lik="${candidate}"
         break
       fi
     done
   fi
-  if [[ -n "${LIC}" && -f "${LIC}/scripts/hello-kern-serial-smoke.py" ]]; then
-    if python3 "${LIC}/scripts/hello-kern-serial-smoke.py" "${KERNEL_ELF}" 2>&1 | tee -a "${LOG}"; then
+  if [[ -n "${lik}" && -f "${lik}/scripts/hello-kern-serial-smoke.py" ]]; then
+    if python3 "${lik}/scripts/hello-kern-serial-smoke.py" "${KERNEL_ELF}" 2>&1 | tee -a "${LOG}"; then
       echo "dev-vm: PASS — hello_kern seen on serial (unicorn)" | tee -a "${LOG}"
-      exit 0
+      return 0
     fi
   fi
-  exit 1
+  return 1
+}
+
+if ! command -v "${QEMU}" >/dev/null 2>&1 && [[ ! -x "${QEMU}" ]]; then
+  echo "dev-vm: QEMU not found: ${QEMU}" >&2
+  echo "dev-vm: falling back to Unicorn serial smoke" >&2
+  unicorn_smoke || exit 1
+  exit 0
 fi
 
 # Prefer i386 multiboot loader when available (M1 hello_kern is i686 freestanding).
@@ -133,21 +160,7 @@ fi
 
 if [[ "${QEMU_RC}" -ne 0 ]]; then
   echo "dev-vm: QEMU rc=${QEMU_RC}; trying Unicorn serial smoke" | tee -a "${LOG}"
-  LIC="${LIC_ROOT:-}"
-  if [[ -z "${LIC}" ]]; then
-    for candidate in "${ROOT}/../lic" "/workspace/lic"; do
-      if [[ -d "${candidate}/.git" ]]; then
-        LIC="${candidate}"
-        break
-      fi
-    done
-  fi
-  if [[ -n "${LIC}" && -f "${LIC}/scripts/hello-kern-serial-smoke.py" ]]; then
-    if python3 "${LIC}/scripts/hello-kern-serial-smoke.py" "${KERNEL_ELF}" 2>&1 | tee -a "${LOG}"; then
-      echo "dev-vm: PASS — hello_kern seen on serial (unicorn fallback)" | tee -a "${LOG}"
-      exit 0
-    fi
-  fi
+  unicorn_smoke && exit 0
 fi
 
 if grep -q 'hello_kern' "${LOG}"; then

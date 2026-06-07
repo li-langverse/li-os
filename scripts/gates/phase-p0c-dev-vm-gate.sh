@@ -7,6 +7,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "${ROOT}/scripts/gates/common.sh"
 
 LIC="$(lic_root)"
+LIK="$(lik_root)"
 require_cmd python3
 
 BUILD_DIR="${ROOT}/../build"
@@ -22,14 +23,16 @@ CI_STUB="${ROOT}/scripts/ci/m1-kernel-smoke.sh"
 {
   echo "phase-p0c-dev-vm gate"
   echo "lic=${LIC}"
+  echo "lik=${LIK}"
   echo "kernel=${KERNEL_ELF}"
   echo "ci_stub=${CI_STUB}"
 } | tee "${ARTIFACT}"
 
 export LIC_ROOT="${LIC}"
+export LIK_ROOT="${LIK}"
 export LIOS_KERNEL_ELF="${KERNEL_ELF}"
 
-bash "${LIC}/scripts/build-hello-kern.sh" 2>&1 | tee -a "${ARTIFACT}"
+bash "${LIK}/scripts/build-hello-kern.sh" 2>&1 | tee -a "${ARTIFACT}"
 [[ -f "${KERNEL_ELF}" ]] || gate_fail "hello_kern.elf not built at ${KERNEL_ELF}"
 
 if ! bash "${ROOT}/scripts/dev-vm.sh" --smoke --arch x86_64 --kernel "${KERNEL_ELF}" 2>&1 | tee -a "${ARTIFACT}"; then

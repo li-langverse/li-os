@@ -16,7 +16,8 @@ Usage: $(basename "$0") [--check | --smoke | --full]
   --full    Run all M1 phase gates (scaffold + hello_kern + dev-vm)
 
 Environment:
-  LIC_ROOT            Path to lic checkout
+  LIC_ROOT            Path to lic checkout (compiler)
+  LIK_ROOT            Path to lik checkout (kernel source)
   LIOS_KERNEL_ELF     Override x86 guest kernel ELF
   LIOS_KERNEL_ELF_AARCH64  Optional aarch64 guest ELF
 EOF

@@ -23,6 +23,23 @@ lic_root() {
   return 1
 }
 
+lik_root() {
+  if [[ -n "${LIK_ROOT:-}" && -d "${LIK_ROOT}" ]]; then
+    echo "${LIK_ROOT}"
+    return 0
+  fi
+  local root
+  root="$(gate_root)"
+  for candidate in "${root}/../lik" "/workspace/lik"; do
+    if [[ -d "${candidate}/.git" ]]; then
+      echo "${candidate}"
+      return 0
+    fi
+  done
+  echo "li-os gates: LIK_ROOT not found (set LIK_ROOT or clone lik as ../lik)" >&2
+  return 1
+}
+
 artifact_dir() {
   local root
   root="$(gate_root)"

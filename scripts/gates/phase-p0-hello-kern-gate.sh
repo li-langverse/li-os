@@ -7,6 +7,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "${ROOT}/scripts/gates/common.sh"
 
 LIC="$(lic_root)"
+LIK="$(lik_root)"
 require_cmd python3
 require_cmd readelf
 
@@ -19,12 +20,16 @@ mkdir -p "$(dirname "${ARTIFACT}")"
 {
   echo "phase-p0-freestanding gate"
   echo "lic=${LIC}"
+  echo "lik=${LIK}"
   echo "kernel=${KERNEL_ELF}"
 } | tee "${ARTIFACT}"
 
+bash "${ROOT}/scripts/gates/check-no-port-caps.sh" 2>&1 | tee -a "${ARTIFACT}"
+
 export LIC_ROOT="${LIC}"
+export LIK_ROOT="${LIK}"
 export LIOS_KERNEL_ELF="${KERNEL_ELF}"
-bash "${LIC}/scripts/build-hello-kern.sh" 2>&1 | tee -a "${ARTIFACT}"
+bash "${LIK}/scripts/build-hello-kern.sh" 2>&1 | tee -a "${ARTIFACT}"
 
 [[ -f "${KERNEL_ELF}" ]] || gate_fail "hello_kern.elf not built at ${KERNEL_ELF}"
 
@@ -65,7 +70,7 @@ fi
 
 # Unicorn @hw outb serial smoke (validates freestanding codegen path).
 UNICORN_LOG="${ROOT}/data/gate-artifacts/hello-kern-unicorn.log"
-if python3 "${LIC}/scripts/hello-kern-serial-smoke.py" "${KERNEL_ELF}" >"${UNICORN_LOG}" 2>&1; then
+if python3 "${LIK}/scripts/hello-kern-serial-smoke.py" "${KERNEL_ELF}" >"${UNICORN_LOG}" 2>&1; then
   echo "Unicorn serial: PASS (see ${UNICORN_LOG})" | tee -a "${ARTIFACT}"
   UNICORN_OK=1
 else

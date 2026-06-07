@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Phase 0 — verify li-os scaffold and lic kernel-abi stub exist.
+# Phase 0 — verify li-os scaffold and lik kernel ABI docs exist.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -28,16 +28,18 @@ if ! "${ROOT}/scripts/dev-vm.sh" --help >/dev/null 2>&1; then
   gate_fail "scripts/dev-vm.sh --help failed"
 fi
 
-LIC="$(lic_root)"
-KERNEL_ABI="${LIC}/docs/kernel-abi.md"
-[[ -f "${KERNEL_ABI}" ]] || gate_fail "missing lic kernel ABI stub: ${KERNEL_ABI}"
+LIK="$(lik_root)"
+lic_root >/dev/null
 
-if ! grep -q '@hw' "${KERNEL_ABI}"; then
-  gate_fail "docs/kernel-abi.md must mention @hw intrinsics"
-fi
+KERNEL_ABI="${LIK}/docs/kernel-abi.md"
+DEVICE_PORTS="${LIK}/docs/device-ports.md"
+[[ -f "${KERNEL_ABI}" ]] || gate_fail "missing lik kernel ABI: ${KERNEL_ABI}"
+[[ -f "${DEVICE_PORTS}" ]] || gate_fail "missing lik device-ports policy: ${DEVICE_PORTS}"
 
-if ! grep -q 'freestanding' "${KERNEL_ABI}"; then
-  gate_fail "docs/kernel-abi.md must document freestanding target"
-fi
+grep -q '@hw' "${KERNEL_ABI}" || gate_fail "kernel-abi.md must mention @hw intrinsics"
+grep -q 'freestanding' "${KERNEL_ABI}" || gate_fail "kernel-abi.md must document freestanding target"
+grep -q 'unlimited' "${DEVICE_PORTS}" || gate_fail "device-ports.md must document unlimited port policy"
 
-gate_pass "phase-0-scaffold (li-os + lic kernel-abi stub)"
+[[ -f "${LIK}/scripts/build-hello-kern.sh" ]] || gate_fail "missing lik/scripts/build-hello-kern.sh"
+
+gate_pass "phase-0-scaffold (li-os + lik docs + lic toolchain)"
