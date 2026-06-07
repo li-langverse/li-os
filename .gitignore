@@ -1,0 +1,16 @@
+# Build artifacts
+/build/
+/dist/
+*.o
+*.elf
+*.bin
+*.iso
+
+# Gate artifacts
+/data/gate-artifacts/
+
+# Editor / OS
+.DS_Store
+*.swp
+.idea/
+.vscode/
