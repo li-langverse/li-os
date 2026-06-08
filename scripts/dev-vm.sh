@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# LiOS dev VM — QEMU launcher for kernel smoke tests.
+# LiOS dev VM — kernel smoke via lic (Li-native; no QEMU required for --smoke).
 #
 # Phase 0: skeleton only (--help, --smoke stub).
 # Phase 2: --smoke runs hello_kern on x86_64 serial.
@@ -15,10 +15,10 @@ usage() {
   cat <<EOF
 Usage: $(basename "$0") [--smoke] [--arch x86_64|aarch64] [--kernel PATH] [--timeout SEC]
 
-  --smoke       Run serial smoke test (hello_kern must print on QEMU stdout)
-  --arch ARCH   Guest architecture (default: x86_64; also i686, aarch64)
+  --smoke       Run serial smoke test (hello_kern via lic smoke-kernel)
+  --arch ARCH   Guest architecture hint (default: x86_64; smoke uses i686 ELF)
   --kernel PATH Path to freestanding kernel ELF (default: build/hello_kern.elf)
-  --timeout SEC QEMU run timeout in seconds (default: 30)
+  --timeout SEC Instruction budget scale in seconds (default: 30)
   -h, --help    Show this help
 
 Environment:

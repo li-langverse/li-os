@@ -25,7 +25,7 @@ bash scripts/gates/m1-progress-gate.sh
 # All M1 gates
 bash scripts/gates/m1-completion-gate.sh
 
-# Dev VM smoke (lic smoke-kernel via QEMU COM1)
+# Dev VM smoke (Li-native lic smoke-kernel; no external VM)
 export LIC_ROOT=../lic   # or /workspace/lic in agent workspaces
 export LIK_ROOT=../lik   # kernel source + smoke wrapper
 bash scripts/dev-vm.sh --smoke
@@ -39,16 +39,16 @@ bash scripts/ci/m1-kernel-smoke.sh --full
 
 ## Dev VM (`scripts/dev-vm.sh`)
 
-`--smoke` builds on Phase 1 `hello_kern`: runs **`lic smoke-kernel`** (QEMU with ISA
-serial at COM1 / 0x3F8). Success requires `hello_kern` on the captured serial log under
-`data/gate-artifacts/dev-vm-smoke-*.log`.
+`--smoke` builds on Phase 1 `hello_kern`: runs **`lic smoke-kernel`** — lic loads the
+ELF and traps `@hw outb` to COM1 in-process. No QEMU, Python, or Unicorn. Success requires
+`hello_kern` in the log under `data/gate-artifacts/dev-vm-smoke-*.log`.
 
 | Flag | Purpose |
 |------|---------|
 | `--smoke` | Run serial smoke test |
 | `--arch x86_64\|aarch64` | Guest architecture (default: x86_64) |
 | `--kernel PATH` | Freestanding kernel ELF (default: `../build/hello_kern.elf`) |
-| `--timeout SEC` | QEMU timeout (default: 30) |
+| `--timeout SEC` | Smoke instruction budget scale (default: 30) |
 
 Optional **aarch64** guest row: set `LIOS_KERNEL_ELF_AARCH64` when an aarch64 kernel
 ELF is available; otherwise gates document the skip.
@@ -57,7 +57,7 @@ ELF is available; otherwise gates document the skip.
 
 - `lic` on branch `cursor/lios-kernel-m1`, cloned at `../lic` or set `LIC_ROOT`
 - `lik` cloned at `../lik` or set `LIK_ROOT` (kernel + `smoke-hello-kern.sh`)
-- QEMU (`qemu-system-i386` or `qemu-system-x86_64`; optional `/opt/qemu` layout)
+- No external smoke dependencies (QEMU/Python/Unicorn not required for gates)
 
 ## License
 
