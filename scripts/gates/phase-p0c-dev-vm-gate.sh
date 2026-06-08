@@ -8,7 +8,6 @@ source "${ROOT}/scripts/gates/common.sh"
 
 LIC="$(lic_root)"
 LIK="$(lik_root)"
-require_cmd python3
 
 BUILD_DIR="${ROOT}/../build"
 KERNEL_ELF="${BUILD_DIR}/hello_kern.elf"
