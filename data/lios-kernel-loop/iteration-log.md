@@ -98,3 +98,4 @@
 | M2-87 | m2-complete | PASS | freestanding_lld() + CC existence check in gate_export_roots; gates green when CC=clang-22 unset but clang-19 installed (code_implementer) |
 | M2-88 | m2-complete | PASS | m1-completion + m2-completion + m2-progress + m2-kernel-smoke --check re-verified; GitHub push 403 + PR blocked; GitLab origin up-to-date (code_implementer-1781122766058) |
 | M2-89 | m2-complete | PASS | m1-completion + m2-completion + m2-progress + m2-kernel-smoke --check re-verified; GitHub push 403 + PR blocked (createPullRequest token scope); GitHub branch stale at 5ac9aed vs GitLab e8ba018; GitLab origin up-to-date (code_implementer-1781122998178) |
+| M2-90 | m2-complete | PASS | m1-completion + m2-completion + m2-progress + m2-kernel-smoke --check re-verified; LLVM 22 required for virtio/mm MMIO builds (code_implementer-1781124763786) |
