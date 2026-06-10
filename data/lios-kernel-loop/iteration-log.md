@@ -50,4 +50,4 @@
 | M2-39 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; GitHub PR blocked (token scope + rate limit); GitLab MR !2 (code_implementer-1781084519224) |
 | M2-40 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; GitHub PR blocked (token scope); GitLab MR !2 (code_implementer-1781084830690) |
 | M2-41 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; GitHub PR blocked (token scope); GitLab MR !2 (code_implementer-1781085142460) |
-| M2-42 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified (code_implementer-1781085409085) |
+| M2-42 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; GitHub PR blocked (token scope + rate limit); GitLab MR !2 (code_implementer-1781085409085) |
