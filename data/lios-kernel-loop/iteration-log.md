@@ -35,3 +35,4 @@
 | M2-24 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; open M2 PR (code_implementer-1781079389984) |
 | M2-25 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; open M2 PR (code_implementer-1781079727304) |
 | M2-26 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; open M2 PR (code_implementer-1781080175676) |
+| M2-27 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; PR create blocked by token scope (code_implementer-1781080530669) |
