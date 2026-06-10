@@ -77,11 +77,45 @@ lic_bin() {
   return 1
 }
 
+# Match lic freestanding link CC (opaque-pointer IR needs clang-{LLVM major}).
+freestanding_cc() {
+  if [[ -n "${CC:-}" ]]; then
+    echo "${CC}"
+    return 0
+  fi
+  if [[ -n "${LI_LLVM_MAJOR:-}" ]]; then
+    if command -v "clang-${LI_LLVM_MAJOR}" >/dev/null 2>&1; then
+      echo "clang-${LI_LLVM_MAJOR}"
+      return 0
+    fi
+  fi
+  local major
+  for major in 22 21 20 19 18 17 16 15; do
+    if command -v "clang-${major}" >/dev/null 2>&1; then
+      echo "clang-${major}"
+      return 0
+    fi
+  done
+  if command -v clang >/dev/null 2>&1; then
+    echo clang
+    return 0
+  fi
+  echo "li-os gates: freestanding CC not found (install clang-22 or set CC=)" >&2
+  return 1
+}
+
 # Export lic/lik roots and a working compiler binary for lik build-*.sh scripts.
 gate_export_roots() {
   export LIC_ROOT="$(lic_root)"
   export LIK_ROOT="$(lik_root)"
   export LIC="$(lic_bin)"
+  if [[ -z "${CC:-}" ]]; then
+    export CC="$(freestanding_cc)"
+    if [[ "${CC}" =~ clang-([0-9]+)$ ]]; then
+      export LI_LLVM_MAJOR="${LI_LLVM_MAJOR:-${BASH_REMATCH[1]}}"
+      export CXX="${CXX:-clang++-${BASH_REMATCH[1]}}"
+    fi
+  fi
 }
 
 # readelf or llvm-readelf; falls back to bundled Python shim when neither is installed.
