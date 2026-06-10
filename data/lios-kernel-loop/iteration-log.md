@@ -97,3 +97,4 @@
 | M2-86 | m2-complete | PASS | m1-completion + m2-completion + m2-progress + m2-kernel-smoke --check re-verified; GitHub PR/push blocked (createPullRequest token scope + push 403 + API rate limit); GitHub branch stale at 5ac9aed vs GitLab 9bea8cc; GitLab MR !2 open (code_implementer-1781117790757) |
 | M2-87 | m2-complete | PASS | freestanding_lld() + CC existence check in gate_export_roots; gates green when CC=clang-22 unset but clang-19 installed (code_implementer) |
 | M2-88 | m2-complete | PASS | m1-completion + m2-completion + m2-progress + m2-kernel-smoke --check re-verified; GitHub push 403 + PR blocked; GitLab origin up-to-date (code_implementer-1781122766058) |
+| M2-89 | m2-complete | PASS | m1-completion + m2-completion + m2-progress + m2-kernel-smoke --check re-verified; GitHub push 403 + PR blocked (createPullRequest token scope); GitHub branch stale at 5ac9aed vs GitLab e8ba018; GitLab origin up-to-date (code_implementer-1781122998178) |
