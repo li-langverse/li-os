@@ -53,3 +53,4 @@
 | M2-42 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; GitHub PR blocked (token scope + rate limit); GitLab MR !1 (code_implementer-1781085409085) |
 | M2-43 | m2-complete | PASS | lic: @hw.mmio_read32 + smoke-kernel stubs restored; m2-completion-gate re-verified (code_implementer-1781085721278) |
 | M2-44 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; GitHub PR blocked (token scope) (code_implementer-1781086317037) |
+| M2-45 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; GitHub PR blocked (token scope); GitLab MR !2 (code_implementer-1781086555446) |
