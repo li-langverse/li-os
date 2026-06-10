@@ -15,3 +15,4 @@
 | M2-4 | m2-complete | PASS | m2-completion-gate + m2-kernel-smoke.sh --check re-verified (code_implementer-1781072278631) |
 | M2-5 | m2-complete | PASS | m2-completion-gate re-verified; PR opened for review (code_implementer-1781072570485) |
 | M2-6 | m2-complete | PASS | m2-completion-gate re-verified; open M2 PR (code_implementer-1781073001481) |
+| M2-7 | m2-complete | PASS | m2-completion-gate + m2-kernel-smoke --check re-verified (code_implementer-1781073411379) |
