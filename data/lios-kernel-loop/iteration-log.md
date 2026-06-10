@@ -84,3 +84,4 @@
 | M2-73 | m2-complete | PASS | gate_export_roots sets CC=clang-22 for opaque-pointer freestanding builds; m2-completion + m2-progress re-verified (code_implementer-1781113719101) |
 | M2-74 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; GitHub PR/push blocked (403 + createPullRequest token scope); GitLab origin up-to-date (code_implementer-1781114320724) |
 | M2-75 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; GitHub PR blocked (createPullRequest token scope); branch pushed at 539e1c2 (code_implementer-1781114560619) |
+| M2-76 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; GitHub PR blocked (createPullRequest token scope); GitLab MR !2 updated (code_implementer-1781114802080) |
