@@ -1,8 +1,15 @@
 name: M2 kernel gate
 
 on:
+  push:
+    branches: [cursor/lios-kernel-m2]
+    paths:
+      - "scripts/**"
+      - "docs/**"
+      - "data/lios-kernel-loop/**"
+      - ".github/workflows/m2-kernel-gate.yml"
   pull_request:
-    branches: [main, cursor/lios-kernel-m1]
+    branches: [main, cursor/lios-kernel-m1, cursor/lios-kernel-m2]
     paths:
       - "scripts/**"
       - "docs/**"
