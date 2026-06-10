@@ -2,15 +2,17 @@
 
 Li operating system — kernel bring-up, HAL, and dev VM tooling for the Li language ecosystem.
 
-## M1 foundation (in progress)
+## M1 foundation (complete)
 
-This repo hosts the LiOS kernel M1 sprint: freestanding `lic` kernel target (`@hw`), QEMU dev VM, and phase gates.
+This repo hosts the LiOS kernel M1 sprint: freestanding `lic` kernel target (`@hw`), dev-vm smoke, and phase gates.
 
 | Phase | Key | Status |
 |-------|-----|--------|
 | 0 | `phase-0-scaffold` | done |
 | 1 | `phase-p0-freestanding` | done — `hello_kern` serial smoke |
 | 2 | `phase-p0c-dev-vm` | done — `dev-vm.sh --smoke` + CI stub |
+
+**M2** (QEMU dev-vm, virtio, MM) is scaffolded under `scripts/gates/m2-*.sh` on branch `cursor/lios-kernel-m2`.
 
 Normative plan: [docs/plans/2026-06-lios-kernel-m1.md](docs/plans/2026-06-lios-kernel-m1.md)
 
