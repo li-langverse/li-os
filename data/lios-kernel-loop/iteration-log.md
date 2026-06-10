@@ -30,3 +30,4 @@
 | M2-19 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; open M2 PR (code_implementer-1781077714798) |
 | M2-20 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; open M2 PR (code_implementer-1781078015155) |
 | M2-21 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; open M2 PR (code_implementer-1781078365565) |
+| M2-22 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; open M2 PR (code_implementer-1781078731729) |
