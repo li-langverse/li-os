@@ -44,10 +44,13 @@ export LIK_ROOT=../lik   # kernel source + smoke wrapper
 bash scripts/dev-vm.sh --smoke
 bash scripts/dev-vm.sh --smoke --arch i686 --kernel ../build/hello_kern.elf
 
-# CI entrypoint (stub for GitHub Actions)
+# CI entrypoints (stubs for GitHub Actions)
 bash scripts/ci/m1-kernel-smoke.sh --check
 bash scripts/ci/m1-kernel-smoke.sh --smoke
 bash scripts/ci/m1-kernel-smoke.sh --full
+bash scripts/ci/m2-kernel-smoke.sh --check
+bash scripts/ci/m2-kernel-smoke.sh --smoke   # requires qemu-system-x86_64
+bash scripts/ci/m2-kernel-smoke.sh --full
 ```
 
 ## Dev VM (`scripts/dev-vm.sh`)
