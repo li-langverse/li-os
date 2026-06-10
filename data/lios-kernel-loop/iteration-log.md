@@ -12,3 +12,4 @@
 | M2-1b | m2-qemu-dev-vm | PASS | fix multiboot1 checksum in arch/i686/link.ld (QEMU -kernel PVH fallback) |
 | M2-2 | m2-virtio | PASS | virtio-mmio probe + blk sector peek; lic smoke-kernel --stub virtio-mmio |
 | M2-3 | m2-mm | PASS | physmap + bump allocator; lic smoke-kernel --stub mm-bump |
+| M2-4 | m2-complete | PASS | m2-completion-gate + m2-kernel-smoke.sh --check re-verified (code_implementer-1781072278631) |
