@@ -79,7 +79,7 @@ lic_bin() {
 
 # Match lic freestanding link CC (opaque-pointer IR needs clang-{LLVM major}).
 freestanding_cc() {
-  if [[ -n "${CC:-}" ]]; then
+  if [[ -n "${CC:-}" ]] && command -v "${CC}" >/dev/null 2>&1; then
     echo "${CC}"
     return 0
   fi
@@ -104,18 +104,45 @@ freestanding_cc() {
   return 1
 }
 
+# Match lic freestanding link LLD (resolve_lld() prefers ld.lld / lld-{major}).
+freestanding_lld() {
+  if [[ -n "${LLD:-}" ]] && command -v "${LLD}" >/dev/null 2>&1; then
+    echo "${LLD}"
+    return 0
+  fi
+  local major="${LI_LLVM_MAJOR:-}"
+  if [[ -z "${major}" && "${CC:-}" =~ clang-([0-9]+)$ ]]; then
+    major="${BASH_REMATCH[1]}"
+  fi
+  if [[ -n "${major}" ]]; then
+    for candidate in "ld.lld-${major}" "lld-${major}" "/usr/lib/llvm-${major}/bin/ld.lld"; do
+      if command -v "${candidate}" >/dev/null 2>&1; then
+        echo "${candidate}"
+        return 0
+      fi
+    done
+  fi
+  for candidate in ld.lld lld-22 lld; do
+    if command -v "${candidate}" >/dev/null 2>&1; then
+      echo "${candidate}"
+      return 0
+    fi
+  done
+  echo "li-os gates: freestanding LLD not found (install lld or set LLD=)" >&2
+  return 1
+}
+
 # Export lic/lik roots and a working compiler binary for lik build-*.sh scripts.
 gate_export_roots() {
   export LIC_ROOT="$(lic_root)"
   export LIK_ROOT="$(lik_root)"
   export LIC="$(lic_bin)"
-  if [[ -z "${CC:-}" ]]; then
-    export CC="$(freestanding_cc)"
-    if [[ "${CC}" =~ clang-([0-9]+)$ ]]; then
-      export LI_LLVM_MAJOR="${LI_LLVM_MAJOR:-${BASH_REMATCH[1]}}"
-      export CXX="${CXX:-clang++-${BASH_REMATCH[1]}}"
-    fi
+  export CC="$(freestanding_cc)"
+  if [[ "${CC}" =~ clang-([0-9]+)$ ]]; then
+    export LI_LLVM_MAJOR="${BASH_REMATCH[1]}"
+    export CXX="${CXX:-clang++-${BASH_REMATCH[1]}}"
   fi
+  export LLD="$(freestanding_lld)"
 }
 
 # readelf or llvm-readelf; falls back to bundled Python shim when neither is installed.
