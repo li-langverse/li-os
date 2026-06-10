@@ -126,3 +126,4 @@
 | M2-115 | m2-complete | PASS | m1-completion + m2-completion + m2-progress + m2-kernel-smoke --check re-verified; GitHub push DISABLED + PR blocked (createPullRequest token scope); GitHub branch stale at 5ac9aed vs GitLab 4d49932; GitLab origin up-to-date (code_implementer-1781130589494) |
 | M2-116 | m2-complete | PASS | lic GitLab @hw.mmio_read32 + smoke-kernel stubs (51ae647); m2-completion + m2-progress + m2-kernel-smoke --check exit 0; lic GitHub push 403; li-os GitLab push pending (code_implementer-1781130818131) |
 | M2-117 | m2-complete | PASS | m1-completion + m2-completion + m2-progress + m2-kernel-smoke --check re-verified; all M2 phase gates green (code_implementer-1781131208829) |
+| M2-118 | m2-complete | PASS | m1-completion + m2-completion + m2-progress + m2-kernel-smoke --check re-verified; GitHub PR blocked (createPullRequest token scope); GitLab origin up-to-date (code_implementer-1781131421973) |
