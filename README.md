@@ -12,9 +12,15 @@ This repo hosts the LiOS kernel M1 sprint: freestanding `lic` kernel target (`@h
 | 1 | `phase-p0-freestanding` | done — `hello_kern` serial smoke |
 | 2 | `phase-p0c-dev-vm` | done — `dev-vm.sh --smoke` + CI stub |
 
-**M2** (QEMU dev-vm, virtio, MM) is scaffolded under `scripts/gates/m2-*.sh` on branch `cursor/lios-kernel-m2`.
+## M2 kernel bring-up (complete)
 
-Normative plan: [docs/plans/2026-06-lios-kernel-m1.md](docs/plans/2026-06-lios-kernel-m1.md)
+| Phase | Key | Status |
+|-------|-----|--------|
+| P1 | `m2-qemu-dev-vm` | done — `dev-vm.sh --smoke --engine qemu` |
+| P2 | `m2-virtio` | done — virtio-mmio probe + blk read (lik) |
+| P3 | `m2-mm` | done — physmap + bump allocator (lik) |
+
+Normative plans: [M1](docs/plans/2026-06-lios-kernel-m1.md) · [M2](docs/plans/2026-06-lios-kernel-m2.md)
 
 Kernel ABI (lic): [../lic/docs/kernel-abi.md](../lic/docs/kernel-abi.md) when lic is cloned as a sibling.
 
@@ -26,6 +32,11 @@ bash scripts/gates/m1-progress-gate.sh
 
 # All M1 gates
 bash scripts/gates/m1-completion-gate.sh
+
+# M2 gates (requires lik + lic on cursor/lios-kernel-m2)
+export LIK_ROOT=../lik LIC_ROOT=../lic
+bash scripts/gates/m2-progress-gate.sh    # current phase from state.json
+bash scripts/gates/m2-completion-gate.sh  # all M2 phases
 
 # Dev VM smoke (Li-native lic smoke-kernel; no external VM)
 export LIC_ROOT=../lic   # or /workspace/lic in agent workspaces
@@ -48,6 +59,7 @@ ELF and traps `@hw outb` to COM1 in-process. No QEMU, Python, or Unicorn. Succes
 | Flag | Purpose |
 |------|---------|
 | `--smoke` | Run serial smoke test |
+| `--engine lic\|qemu` | Smoke backend: in-process `@hw` (M1) or QEMU x86_64 (M2) |
 | `--arch x86_64\|aarch64` | Guest architecture (default: x86_64) |
 | `--kernel PATH` | Freestanding kernel ELF (default: `../build/hello_kern.elf`) |
 | `--timeout SEC` | Smoke instruction budget scale (default: 30) |
@@ -57,9 +69,10 @@ ELF is available; otherwise gates document the skip.
 
 ## Prerequisites
 
-- `lic` on branch `cursor/lios-kernel-m1`, cloned at `../lic` or set `LIC_ROOT`
-- `lik` cloned at `../lik` or set `LIK_ROOT` (kernel + `smoke-hello-kern.sh`)
-- No external smoke dependencies (QEMU/Python/Unicorn not required for gates)
+- `lic` on branch `cursor/lios-kernel-m2`, cloned at `../lic` or set `LIC_ROOT`
+- `lik` on branch `cursor/lios-kernel-m2`, cloned at `../lik` or set `LIK_ROOT`
+- M1 gates: no external VM deps (lic `smoke-kernel` only)
+- M2 P1 gate: `qemu-system-x86_64` required for `--engine qemu`
 
 ## License
 
