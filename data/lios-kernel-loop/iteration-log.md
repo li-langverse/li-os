@@ -8,3 +8,6 @@
 | R0 | phase-r0-lik-scaffold | PASS | lik repo; kernel moved from lic; device-ports unlimited policy |
 | R1 | phase-r1-lic-compiler-only | PASS | lic compiler-only; kernel tree removed |
 | R2 | phase-r2-lios-gates | PASS | LIK_ROOT gates; check-no-port-caps; dev-vm dynamic hostfwd |
+| M2-1 | m2-qemu-dev-vm | PASS | dev-vm.sh --smoke --engine qemu; hello_kern on QEMU serial |
+| M2-2 | m2-virtio | PASS | virtio-mmio probe + blk sector peek; lic smoke-kernel --stub virtio-mmio |
+| M2-3 | m2-mm | PASS | physmap + bump allocator; lic smoke-kernel --stub mm-bump |
