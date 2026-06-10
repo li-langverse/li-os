@@ -86,3 +86,4 @@
 | M2-75 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; GitHub PR blocked (createPullRequest token scope); branch pushed at 539e1c2 (code_implementer-1781114560619) |
 | M2-76 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; GitHub PR blocked (createPullRequest token scope); GitLab MR !2 updated (code_implementer-1781114802080) |
 | M2-77 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; GitHub PR/push blocked (403 + createPullRequest token scope); GitLab MR !2 open (code_implementer-1781115076399) |
+| M2-78 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; open M2 PR (code_implementer-1781115339530) |
