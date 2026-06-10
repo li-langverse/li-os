@@ -56,6 +56,54 @@ require_cmd() {
   fi
 }
 
+lic_bin() {
+  local root
+  root="$(lic_root)"
+  local candidate
+  for candidate in \
+    "${root}/build-kernel/compiler/lic/lic" \
+    "${root}/build/compiler/lic/lic" \
+    "${root}/build-wsl/compiler/lic/lic"; do
+    if [[ -x "${candidate}" ]] && "${candidate}" --version >/dev/null 2>&1; then
+      echo "${candidate}"
+      return 0
+    fi
+  done
+  if command -v lic >/dev/null 2>&1 && lic --version >/dev/null 2>&1; then
+    command -v lic
+    return 0
+  fi
+  echo "li-os gates: lic compiler not found (build lic or set LIC=)" >&2
+  return 1
+}
+
+# Export lic/lik roots and a working compiler binary for lik build-*.sh scripts.
+gate_export_roots() {
+  export LIC_ROOT="$(lic_root)"
+  export LIK_ROOT="$(lik_root)"
+  export LIC="$(lic_bin)"
+}
+
+# readelf or llvm-readelf; falls back to bundled Python shim when neither is installed.
+readelf_cmd() {
+  if command -v readelf >/dev/null 2>&1; then
+    echo readelf
+    return 0
+  fi
+  if command -v llvm-readelf >/dev/null 2>&1; then
+    echo llvm-readelf
+    return 0
+  fi
+  local shim
+  shim="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/elf-readelf-shim.py"
+  if [[ -f "${shim}" ]]; then
+    echo "python3 ${shim}"
+    return 0
+  fi
+  echo "li-os gates: readelf/llvm-readelf not found and no shim at ${shim}" >&2
+  return 1
+}
+
 gate_pass() {
   echo "PASS: $*"
 }

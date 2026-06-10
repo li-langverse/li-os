@@ -57,7 +57,7 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq \
             cmake ninja-build clang-22 llvm-22-dev lld-22 \
-            zlib1g-dev libzstd-dev python3 qemu-system-x86
+            binutils zlib1g-dev libzstd-dev python3 qemu-system-x86
 
       - name: Build lic (freestanding kernel target)
         working-directory: lic

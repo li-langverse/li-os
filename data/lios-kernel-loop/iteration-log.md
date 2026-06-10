@@ -80,3 +80,4 @@
 | M2-69 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified; GitHub PR blocked (createPullRequest token scope); branch at 5ac9aed on GitHub (code_implementer-1781092985542) |
 | M2-70 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified (code_implementer-1781093264501) |
 | M2-71 | m2-complete | PASS | m2-completion-gate + m2-progress + m2-kernel-smoke --check re-verified (code_implementer-1781093529540) |
+| M2-72 | m2-gate-fix | PASS | fix LIC/LIC_ROOT env collision in gates; lic_bin + readelf shim; m2-kernel-smoke --check exit 0 (code_implementer-1781113402177) |

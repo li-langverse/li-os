@@ -6,9 +6,9 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 # shellcheck source=common.sh
 source "${ROOT}/scripts/gates/common.sh"
 
-LIC="$(lic_root)"
-LIK="$(lik_root)"
-require_cmd readelf
+gate_export_roots
+LIK="${LIK_ROOT}"
+READELF="$(readelf_cmd)" || exit 1
 
 BUILD_DIR="${ROOT}/../build"
 KERNEL_ELF="${BUILD_DIR}/hello_kern.elf"
@@ -18,15 +18,14 @@ mkdir -p "$(dirname "${ARTIFACT}")"
 
 {
   echo "phase-p0-freestanding gate"
-  echo "lic=${LIC}"
+  echo "lic=${LIC_ROOT}"
   echo "lik=${LIK}"
   echo "kernel=${KERNEL_ELF}"
+  echo "readelf=${READELF}"
 } | tee "${ARTIFACT}"
 
 bash "${ROOT}/scripts/gates/check-no-port-caps.sh" 2>&1 | tee -a "${ARTIFACT}"
 
-export LIC_ROOT="${LIC}"
-export LIK_ROOT="${LIK}"
 export LIOS_KERNEL_ELF="${KERNEL_ELF}"
 bash "${LIK}/scripts/build-hello-kern.sh" 2>&1 | tee -a "${ARTIFACT}"
 

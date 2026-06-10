@@ -6,8 +6,8 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 # shellcheck source=common.sh
 source "${ROOT}/scripts/gates/common.sh"
 
-LIC="$(lic_root)"
-LIK="$(lik_root)"
+gate_export_roots
+LIK="${LIK_ROOT}"
 
 BUILD_DIR="${ROOT}/../build"
 KERNEL_ELF="${BUILD_DIR}/hello_kern.elf"
@@ -20,13 +20,11 @@ require_cmd qemu-system-x86_64 || gate_fail "qemu-system-x86_64 not installed"
 
 {
   echo "phase-m2-qemu-dev-vm gate"
-  echo "lic=${LIC}"
+  echo "lic=${LIC_ROOT}"
   echo "lik=${LIK}"
   echo "kernel=${KERNEL_ELF}"
 } | tee "${ARTIFACT}"
 
-export LIC_ROOT="${LIC}"
-export LIK_ROOT="${LIK}"
 export LIOS_KERNEL_ELF="${KERNEL_ELF}"
 export LIOS_DEV_VM_ENGINE=qemu
 

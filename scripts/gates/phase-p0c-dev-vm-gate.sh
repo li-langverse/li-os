@@ -6,8 +6,8 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 # shellcheck source=common.sh
 source "${ROOT}/scripts/gates/common.sh"
 
-LIC="$(lic_root)"
-LIK="$(lik_root)"
+gate_export_roots
+LIK="${LIK_ROOT}"
 
 BUILD_DIR="${ROOT}/../build"
 KERNEL_ELF="${BUILD_DIR}/hello_kern.elf"
@@ -21,14 +21,12 @@ CI_STUB="${ROOT}/scripts/ci/m1-kernel-smoke.sh"
 
 {
   echo "phase-p0c-dev-vm gate"
-  echo "lic=${LIC}"
+  echo "lic=${LIC_ROOT}"
   echo "lik=${LIK}"
   echo "kernel=${KERNEL_ELF}"
   echo "ci_stub=${CI_STUB}"
 } | tee "${ARTIFACT}"
 
-export LIC_ROOT="${LIC}"
-export LIK_ROOT="${LIK}"
 export LIOS_KERNEL_ELF="${KERNEL_ELF}"
 
 bash "${LIK}/scripts/build-hello-kern.sh" 2>&1 | tee -a "${ARTIFACT}"
