@@ -155,3 +155,4 @@
 | M2-144 | m2-complete | PASS | m1-completion + m2-completion + m2-progress + m2-kernel-smoke --check re-verified; GitLab origin pushed @ 465a49e; GitHub push DISABLED + PR blocked (createPullRequest token scope) (code_implementer-1781137080557) |
 | M2-145 | m2-complete | PASS | m1-completion + m2-completion + m2-progress + m2-kernel-smoke --check re-verified; GitHub push DISABLED + PR blocked (createPullRequest token scope); GitHub branch stale at 5ac9aed vs GitLab 2fe99d1 (87 commits); GitLab origin up-to-date (code_implementer-1781137288101) |
 | M2-146 | m2-complete | PASS | m1-completion + m2-completion + m2-progress + m2-kernel-smoke --check re-verified; GitHub push DISABLED + PR blocked (API rate limit 403); GitLab origin up-to-date (code_implementer-1781137501212) |
+| M2-147 | m2-complete | PASS | m1-completion + m2-completion + m2-progress + m2-kernel-smoke --check re-verified; all M2 phase gates green (code_implementer-1781137704681) |
