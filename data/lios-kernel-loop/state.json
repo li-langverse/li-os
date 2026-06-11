@@ -1,1 +1,8 @@
-{"phase":"m2-mm","sprint":"m2","prerequisite":"m1-complete"}
+{
+  "phase": "m2-complete",
+  "sprint": "m2",
+  "prerequisite": "m1-complete",
+  "phases_done": [
+    "P3"
+  ]
+}
