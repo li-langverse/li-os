@@ -164,3 +164,4 @@
 | M2-153 | m2-complete | PASS | m1-completion + m2-completion + m2-progress + m2-kernel-smoke --check re-verified; all M2 phase gates green; GitHub push DISABLED; GitHub branch stale at 5ac9aed vs GitLab 201769a (code_implementer-1781138983058) |
 | M2-154 | m2-complete | PASS | m1-completion + m2-completion + m2-progress + m2-kernel-smoke --check re-verified; all M2 phase gates green (code_implementer-1781139196455) |
 | M2-155 | m2-complete | PASS | m1-completion + m2-completion + m2-progress + m2-kernel-smoke --check re-verified; all M2 phase gates green (code_implementer-1781139397540) |
+| M2-156 | m2-complete | PASS | m1-completion + m2-completion + m2-progress + m2-kernel-smoke --check re-verified; all M2 phase gates green; GitHub push DISABLED + PR blocked (createPullRequest token scope); GitHub branch stale at 5ac9aed vs GitLab 1bb0a6a (code_implementer-1781139598405) |
